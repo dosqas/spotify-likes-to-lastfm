@@ -1,15 +1,18 @@
-import requests
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+import pylast
+
+# Limit how many liked songs you want transfer (order is starting with the most recent likes)
+NUMBER_OF_LIKES = 400
 
 # Replace these with your actual credentials
-SPOTIFY_CLIENT_ID = 'your_spotify_client_id'
-SPOTIFY_CLIENT_SECRET = 'your_spotify_client_secret'
+SPOTIFY_CLIENT_ID = 'SPOTIFY_CLIENT_ID'
+SPOTIFY_CLIENT_SECRET = 'SPOTIFY_CLIENT_SECRET'
 SPOTIFY_REDIRECT_URI = 'http://localhost:8888/callback'
-LASTFM_API_KEY = 'your_lastfm_api_key'
-LASTFM_API_SECRET = 'your_lastfm_api_secret'
-LASTFM_USERNAME = 'your_lastfm_username'
-LASTFM_PASSWORD = 'your_lastfm_password'  # This should be hashed using MD5
+LASTFM_API_KEY = 'LASTFM_API_KEY'
+LASTFM_API_SECRET = 'LASTFM_API_SECRET'
+LASTFM_USERNAME = 'LASTFM_USERNAME'
+LASTFM_PASSWORD = 'LASTFM_PASSWORD'
 
 # Step 1: Authenticate with Spotify
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID,
@@ -17,13 +20,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID,
                                                redirect_uri=SPOTIFY_REDIRECT_URI,
                                                scope="user-library-read"))
 
-# Step 2: Get liked songs from Spotify
-results = sp.current_user_saved_tracks()
-liked_songs = results['items']
-
-# Step 3: Authenticate with Last.fm
-import pylast
-
+# Step 2: Authenticate with Last.fm
 network = pylast.LastFMNetwork(
     api_key=LASTFM_API_KEY,
     api_secret=LASTFM_API_SECRET,
@@ -31,16 +28,36 @@ network = pylast.LastFMNetwork(
     password_hash=pylast.md5(LASTFM_PASSWORD),
 )
 
-# Step 4: Scrobble each song to Last.fm
-for item in liked_songs:
-    track = item['track']
-    artist_name = track['artists'][0]['name']
-    track_name = track['name']
+# Initialize variables for loop
+offset = 0
+liked_songs_count = 0
 
-    # Optional: Log the song being scrobbled
-    print(f"Scrobbling {track_name} by {artist_name}")
+while liked_songs_count < NUMBER_OF_LIKES:
+    # Fetch liked songs in batches of 50
+    results = sp.current_user_saved_tracks(limit=50, offset=offset)
+    liked_songs = results['items']
 
-    # Scrobble the song to Last.fm
-    network.scrobble(artist=artist_name, title=track_name, timestamp=int(time.time()))
+    if not liked_songs:  # If no more songs are found, break out of the loop
+        break
 
-print("Done scrobbling all liked songs!")
+    for item in liked_songs:
+        if liked_songs_count >= NUMBER_OF_LIKES:
+            break
+
+        track = item['track']
+        artist_name = track['artists'][0]['name']
+        track_name = track['name']
+
+        # Optional: Log the song being "loved"
+        print(f"Loving {track_name} by {artist_name} on Last.fm")
+
+        # Love the song on Last.fm
+        track = network.get_track(artist_name, track_name)
+        track.love()
+
+        liked_songs_count += 1
+
+    # Increase offset to get the next batch of liked songs
+    offset += 50
+
+print(f"Done loving {liked_songs_count} liked songs on Last.fm!")
