@@ -1,6 +1,6 @@
 # Spotify to Last.fm - Transfer Liked Songs Script
 
-This Python script allows you to transfer your liked songs from Spotify to your Last.fm account as "loved" tracks. It helps you synchronize your music preferences between the two platforms by automating the process.
+This Python script allows you to transfer your liked songs from Spotify to your Last.fm account as "loved" tracks. It helps you synchronize your music preferences between the two platforms by automating the process. The script logs the transferred likes, allowing you to rerun it periodically to update recent likes. It will continue until it encounters likes that have already been logged.
 
 ## Features
 
