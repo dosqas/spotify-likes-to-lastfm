@@ -1,10 +1,37 @@
+"""
+MIT License
+
+Copyright (c) 2024 Raphael Maschinsen
+raphaelmaschinsen@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import pylast
 import os
+from typing import Optional
 
 # Limit how many liked songs you want to transfer (order is starting with the most recent likes)
-NUMBER_OF_RECENT_LIKES_TO_TRANSFER = 400
+# Set to None to transfer all liked songs
+LIMIT_NUMBER_OF_RECENT_LIKES_TO_TRANSFER: Optional[int] = None
 LOG_FILE = 'loved_songs.log'
 
 # Replace these with your actual credentials
@@ -30,19 +57,19 @@ network = pylast.LastFMNetwork(
     password_hash=pylast.md5(LASTFM_PASSWORD),
 )
 
-# Function to read log file and get already loved songs
-def read_loved_songs_log(file_path):
+# Function to read log file and get already loved song identifiers
+def read_loved_songs_log(file_path: str) -> set:
     if os.path.exists(file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             return set(line.strip() for line in f)
     return set()
 
-# Function to write a song to the log file
-def log_loved_song(file_path, artist, track):
+# Function to write a song's details to the log file
+def log_loved_song(file_path: str, artist: str, title: str, id_: str):
     with open(file_path, 'a', encoding='utf-8') as f:
-        f.write(f"{artist} - {track}\n")
+        f.write(f"{artist} - {title} - {id_}\n")
 
-# Load already loved songs from the log file
+# Load already loved song identifiers from the log file
 loved_songs_log = read_loved_songs_log(LOG_FILE)
 
 # Initialize variables for loop
@@ -50,7 +77,7 @@ offset = 0
 liked_songs_count = 0
 encountered_already_loved_song = False
 
-while liked_songs_count < NUMBER_OF_RECENT_LIKES_TO_TRANSFER:
+while True:
     # Fetch liked songs in batches of 50
     results = sp.current_user_saved_tracks(limit=50, offset=offset)
     liked_songs = results['items']
@@ -59,37 +86,44 @@ while liked_songs_count < NUMBER_OF_RECENT_LIKES_TO_TRANSFER:
         break
 
     for item in liked_songs:
-        if liked_songs_count >= NUMBER_OF_RECENT_LIKES_TO_TRANSFER:
+        if (
+            LIMIT_NUMBER_OF_RECENT_LIKES_TO_TRANSFER is not None and
+            liked_songs_count >= LIMIT_NUMBER_OF_RECENT_LIKES_TO_TRANSFER
+        ):
             break
 
         track = item['track']
+        track_id = track['id']  # Get the unique track ID
         artist_name = track['artists'][0]['name']
         track_name = track['name']
-        song_identifier = f"{artist_name} - {track_name}"
+        song_identifier = f"{artist_name} - {track_name} - {track_id}"
 
         # Stop the process if the song is already loved
         if song_identifier in loved_songs_log:
-            print(f"Encountered already loved song: {song_identifier}. Stopping the process.")
+            print(f"Encountered already loved song: {track_name} by {artist_name}. Stopping the process.")
             encountered_already_loved_song = True
-            liked_songs_count = NUMBER_OF_RECENT_LIKES_TO_TRANSFER  # Force exit of the outer loop
             break
 
-        # Optional: Log the song being "loved"
         print(f"Loving {track_name} by {artist_name} on Last.fm")
 
         # Love the song on Last.fm
-        track = network.get_track(artist_name, track_name)
-        track.love()
+        track_lfm = network.get_track(artist_name, track_name)
+        track_lfm.love()
 
-        # Log the song to the file
-        log_loved_song(LOG_FILE, artist_name, track_name)
+        # Log the song details to the file
+        log_loved_song(LOG_FILE, artist_name, track_name, track_id)
 
         liked_songs_count += 1
+
+    if encountered_already_loved_song or (
+        LIMIT_NUMBER_OF_RECENT_LIKES_TO_TRANSFER is not None and
+        liked_songs_count >= LIMIT_NUMBER_OF_RECENT_LIKES_TO_TRANSFER
+    ):
+        break
 
     # Increase offset to get the next batch of liked songs
     offset += 50
 
-# Final message
 if encountered_already_loved_song:
     print("Stopped because it encountered an already logged liked song.")
 else:
