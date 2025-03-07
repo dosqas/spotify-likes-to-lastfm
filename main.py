@@ -29,7 +29,6 @@ from spotipy.oauth2 import SpotifyOAuth
 import pylast
 import os
 import argparse
-from typing import Optional
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -47,10 +46,9 @@ def parse_args():
 	return parser.parse_args()
 
 
-# Limit how many liked songs you want to transfer (order is starting with the most recent likes)
-# Set to None to transfer all liked songs
-LIMIT_NUMBER_OF_RECENT_LIKES_TO_TRANSFER: Optional[int] = None
-
+LIMIT_NUMBER_OF_RECENT_LIKES_TO_TRANSFER = (
+	int(os.getenv("LIMIT_NUMBER_OF_RECENT_LIKES", "0")) or None
+)
 LOG_FILE = os.getenv("LOG_FILE") or "loved_songs.log"
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
