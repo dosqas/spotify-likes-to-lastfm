@@ -8,12 +8,16 @@ This Python script allows you to transfer your liked songs from Spotify to your 
 - **Automatic Updates**: It keeps a log of already transferred songs and skips those that are already loved.
 - **Customizable Limit**: You can optionally set a limit on the number of songs to transfer. It will always start transferring the most recent likes.
 - **Delete Option**: You can delete all loved tracks from your Last.fm account using the `--deleteAll` flag.
+- **Pause/Resume**: Press the spacebar to pause or resume the transfer process at any time.
+- **Improved Error Handling**: Better error handling and validation of configuration.
+- **Structured Code**: Clean, object-oriented design with proper separation of concerns.
+- **Type Safety**: Full type hints for better code reliability and IDE support.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following:
 
-1. **Python 3.x**: The script requires Python 3.x to run. You can download Python from [python.org](https://www.python.org/downloads/). Or use [uv](https://docs.astral.sh/uv/) to install and manage python versions.
+1. **Python 3.13**: The script requires Python 3.13 or higher to run. You can download Python from [python.org](https://www.python.org/downloads/). Or use [uv](https://docs.astral.sh/uv/) to install and manage python versions.
 2. **Spotify Developer Account**\*: You need to create an app in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) to get your Client ID and Client Secret.
 3. **Last.fm API Key**\*: Create a developer account and generate an API key on the [Last.fm API page](https://www.last.fm/api).
 
@@ -122,6 +126,12 @@ python main.py
 python main.py --deleteAll
 ```
 
+#### Interactive Controls
+
+During execution, you can:
+- **Pause/Resume**: Press the **spacebar** to pause or resume the transfer process
+- **Stop**: Press **Ctrl+C** to stop the script gracefully
+
 ### 5. Development
 
 This project uses:
@@ -140,9 +150,35 @@ To format code:
 uv run ruff format
 ```
 
+To run type checking:
+```bash
+# With uv
+uv run ruff check --select I
+```
+
+## Code Structure
+
+The script has been restructured with a clean, object-oriented design:
+
+- **`Config`**: Manages environment variables and configuration validation
+- **`Authenticator`**: Handles authentication with Spotify and Last.fm
+- **`SpotifyService`**: Manages Spotify API operations
+- **`LastFMService`**: Manages Last.fm API operations
+- **`LogManager`**: Handles logging of transferred songs
+- **`TransferService`**: Orchestrates the transfer process
+- **`CustomFormatter`**: Provides colored console output
+
+## Error Handling
+
+The script now includes improved error handling:
+- Configuration validation before execution
+- Graceful handling of network errors
+- Better error messages and logging
+- Type safety with full type hints
+
 ## Contributing
 
-If you want to contribute to this project, feel free to fork the repository and submit pull requests.
+If you want to contribute to this project, feel free to fork the repository and submit pull requests. Please ensure your code follows the project's style guidelines and includes appropriate type hints.
 
 ## License
 
