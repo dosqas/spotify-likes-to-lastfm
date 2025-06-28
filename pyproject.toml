@@ -4,10 +4,25 @@ version = "0.1.0"
 description = "Spotify to Last.fm - Transfer Liked Songs Script"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = ["dotenv>=0.9.9", "pylast>=5.5.0", "spotipy>=2.25.1"]
+dependencies = [
+    "dotenv>=0.9.9",
+    "pylast>=5.5.0", 
+    "spotipy>=2.25.1",
+    "requests>=2.31.0",
+    "colorama>=0.4.6",
+    "keyboard>=0.13.5"
+]
 
 [dependency-groups]
 dev = ["ruff>=0.9.9"]
 
 [tool.ruff.format]
-indent-style = "tab"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "DTZ", "T10", "EM", "EXE", "FA", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PL", "PIE", "PT", "Q", "RSE", "RET", "SLF", "SLOT", "SIM", "TID", "TCH", "ARG", "PTH", "ERA", "PD", "LOG", "TRV", "FURB", "C90", "COM", "CPY", "D", "ISC", "N", "Q", "S", "T20", "UP", "W", "YTT", "S", "BLE", "FBT", "A", "COM", "C4", "DTZ", "T10", "EM", "EXE", "FA", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PL", "PIE", "PT", "Q", "RSE", "RET", "SLF", "SLOT", "SIM", "TID", "TCH", "ARG", "PTH", "ERA", "PD", "LOG", "TRV", "FURB", "C90", "COM", "CPY", "D", "ISC", "N", "Q", "S", "T20", "UP", "W", "YTT", "S", "BLE", "FBT"]
+ignore = ["E501", "W503", "E203"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
