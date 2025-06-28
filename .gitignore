@@ -6,3 +6,5 @@
 !.env.example
 .venv
 venv/
+build
+*.egg-info
