@@ -5,6 +5,9 @@ Copyright (c) 2024 Raphael Maschinsen
 raphaelmaschinsen@gmail.com
 Copyright (c) 2025 hazre
 
+Copyright (c) 2025 Sebastian "dosqas" Soptelea
+sebastian.soptelea@proton.me
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -53,7 +56,7 @@ LOG_FILE = os.getenv("LOG_FILE") or "loved_songs.log"
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 SPOTIFY_REDIRECT_URI = (
-	os.getenv("SPOTIFY_REDIRECT_URI") or "http://localhost:8888/callback"
+	os.getenv("SPOTIFY_REDIRECT_URI") or "http://127.0.0.1:8888/callback"
 )
 LASTFM_API_KEY = os.getenv("LASTFM_API_KEY")
 LASTFM_API_SECRET = os.getenv("LASTFM_API_SECRET")
@@ -147,6 +150,10 @@ def transfer_liked_songs():
 				break
 
 			track = item["track"]
+			if track is None:
+				print("Skipping a removed or unavailable track.")
+				continue
+
 			track_id = track["id"]  # Get the unique track ID
 			artist_name = track["artists"][0]["name"]
 			track_name = track["name"]
