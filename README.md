@@ -14,8 +14,10 @@ This Python script allows you to transfer your liked songs from Spotify to your 
 Before you begin, ensure you have the following:
 
 1. **Python 3.x**: The script requires Python 3.x to run. You can download Python from [python.org](https://www.python.org/downloads/). Or use [uv](https://docs.astral.sh/uv/) to install and manage python versions.
-2. **Spotify Developer Account**: You need to create an app in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) to get your Client ID and Client Secret.
-3. **Last.fm API Key**: Create a developer account and generate an API key on the [Last.fm API page](https://www.last.fm/api).
+2. **Spotify Developer Account**\*: You need to create an app in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) to get your Client ID and Client Secret.
+3. **Last.fm API Key**\*: Create a developer account and generate an API key on the [Last.fm API page](https://www.last.fm/api).
+
+\***Note:** Step-by-step instructions for setting up your Spotify and Last.fm credentials are provided further below in this README.
 
 ## Installation Guide
 
@@ -52,7 +54,10 @@ pip install .
 2. Create a new app by clicking the "Create an App" button.
 3. Fill in the required details for your app.
 4. After creating the app, you'll see a section called **Redirect URIs**.
-5. Add `http://localhost:8888/callback` as a redirect URI. This is necessary because the script uses this address to receive the authentication token from Spotify.
+5. Add `http://127.0.0.1:8888/callback`* as a redirect URI. This is necessary because the script uses this address to receive the authentication token from Spotify.
+
+\***Note:** Spotify now requires the redirect URI to use `127.0.0.1` instead of `localhost` for security reasons. In older versions of the script, `localhost` was used and will soon not work anymore due to it being deprecated. Make sure to update your Spotify app settings and `.env` file accordingly if you haven't already, otherwise continue.
+
 6. Save your changes and note down your **Client ID** and **Client Secret**.
 
 #### Last.fm Developer Account Setup
@@ -60,7 +65,10 @@ pip install .
 1. Visit the [Last.fm API page](https://www.last.fm/api).
 2. Log in with your Last.fm account or create one if you don't have it.
 3. Click on the "Get an API account" link.
-4. Fill in the form with any app name (it can be anything, like "Spotify to Last.fm Transfer").
+4. Fill in the form* with any app name (it can be anything, like "Spotify to Last.fm Transfer").
+
+\***Note:** No `Callback URL` or `Application Homepage` need to be entered, since Last.fm does not require a redirect URI for OAuth authentication. Feel free to leave them empty (recommended).
+
 5. After submitting the form, you'll receive your **API Key** and **Shared Secret**.
 
 #### Configure Environment Variables
@@ -82,13 +90,13 @@ LASTFM_USERNAME="your_lastfm_username"
 LASTFM_PASSWORD="your_lastfm_password"
 
 # Optional settings
-SPOTIFY_REDIRECT_URI="http://localhost:8888/callback"
+SPOTIFY_REDIRECT_URI="http://127.0.0.1:8888/callback"
 LOG_FILE="loved_songs.log"
 LIMIT_NUMBER_OF_RECENT_LIKES="100"
 ```
 
 All settings after the "Optional settings" comment are optional:
-- `SPOTIFY_REDIRECT_URI` defaults to "http://localhost:8888/callback"
+- `SPOTIFY_REDIRECT_URI` defaults to "http://127.0.0.1:8888/callback"
 - `LOG_FILE` defaults to "loved_songs.log"
 - `LIMIT_NUMBER_OF_RECENT_LIKES` is not set by default (transfers all songs)
 
