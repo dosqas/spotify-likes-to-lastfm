@@ -1,29 +1,35 @@
-# Spotify to Last.fm - Transfer Liked Songs Script
+# 🎵 Spotify to Last.fm - Transfer Liked Songs Script
 
 This Python script allows you to transfer your liked songs from Spotify to your Last.fm account as "loved" tracks. The script logs the transferred likes, allowing you to rerun it periodically to update recent likes. It helps you synchronize your music preferences between the two platforms by automating the process.
 
-## Features
+---
 
-- **Automatic Transfer**: The script automatically transfers your liked songs from Spotify to Last.fm.
-- **Automatic Updates**: It keeps a log of already transferred songs and skips those that are already loved.
-- **Customizable Limit**: You can optionally set a limit on the number of songs to transfer. It will always start transferring the most recent likes.
-- **Delete Option**: You can delete all loved tracks from your Last.fm account using the `--deleteAll` flag.
-- **Pause/Resume**: Press the spacebar to pause or resume the transfer process at any time.
-- **Improved Error Handling**: Better error handling and validation of configuration.
-- **Structured Code**: Clean, object-oriented design with proper separation of concerns.
-- **Type Safety**: Full type hints for better code reliability and IDE support.
+## ✨ Features
 
-## Prerequisites
+- **Automatic Transfer 🔄**: The script automatically transfers your liked songs from Spotify to Last.fm.
+- **Automatic Updates 📝**: It keeps a log of already transferred songs and skips those that are already loved.
+- **Customizable Limit 🎚️**: You can optionally set a limit on the number of songs to transfer. It will always start transferring the most recent likes.
+- **Delete Option ❌**: You can delete all loved tracks from your Last.fm account using the `--deleteAll` flag.
+- **Pause/Resume ⏸️▶️**: Press the spacebar to pause or resume the transfer process at any time.
+- **Improved Error Handling ⚠️**: Better error handling and validation of configuration.
+- **Structured Code 🏗️**: Clean, object-oriented design with proper separation of concerns.
+- **Type Safety 🔒**: Full type hints for better code reliability and IDE support.
+
+---
+
+## 🛠️ Prerequisites
 
 Before you begin, ensure you have the following:
 
-1. **Python 3.13**: The script requires Python 3.13 or higher to run. You can download Python from [python.org](https://www.python.org/downloads/). Or use [uv](https://docs.astral.sh/uv/) to install and manage python versions.
-2. **Spotify Developer Account**\*: You need to create an app in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) to get your Client ID and Client Secret.
-3. **Last.fm API Key**\*: Create a developer account and generate an API key on the [Last.fm API page](https://www.last.fm/api).
+1. **Python 3.13 🐍**: The script requires Python 3.13 or higher to run. You can download Python from [python.org](https://www.python.org/downloads/). Or use [uv](https://docs.astral.sh/uv/) to install and manage python versions.
+2. **Spotify Developer Account 🎶**\*: You need to create an app in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications) to get your Client ID and Client Secret.
+3. **Last.fm API Key 🎵**\*: Create a developer account and generate an API key on the [Last.fm API page](https://www.last.fm/api).
 
 \***Note:** Step-by-step instructions for setting up your Spotify and Last.fm credentials are provided further below in this README.
 
-## Installation Guide
+---
+
+## ⚡ Installation Guide
 
 Follow these steps to set up and run the script:
 
@@ -156,7 +162,9 @@ To run type checking:
 uv run ruff check --select I
 ```
 
-## Code Structure
+---
+
+## 🏗️ Code Structure
 
 The script has been restructured with a clean, object-oriented design:
 
@@ -168,7 +176,9 @@ The script has been restructured with a clean, object-oriented design:
 - **`TransferService`**: Orchestrates the transfer process
 - **`CustomFormatter`**: Provides colored console output
 
-## Error Handling
+---
+
+## ⚠️ Error Handling
 
 The script now includes improved error handling:
 - Configuration validation before execution
@@ -176,10 +186,20 @@ The script now includes improved error handling:
 - Better error messages and logging
 - Type safety with full type hints
 
-## Contributing
+---
+
+## 🤝 Contributing
 
 If you want to contribute to this project, feel free to fork the repository and submit pull requests. Please ensure your code follows the project's style guidelines and includes appropriate type hints.
 
-## License
+---
 
-This project is licensed under the MIT License.
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 💡 Contact
+
+Questions, feedback, or ideas? Reach out anytime at [sebastian.soptelea@proton.me](mailto:sebastian.soptelea@proton.me).
